@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "npx vite dev",
+    "build": "npx vite build",
+    "preview": "npx vite preview"
   },
   "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.0",
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/kit": "^2.0.0",
     "svelte": "^4.0.0",
