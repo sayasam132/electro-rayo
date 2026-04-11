@@ -72,6 +72,8 @@
     </div>
   </div>
 
+  <h2 class="section-title">Proyectos realizados</h2>
+
   <div class="grid">
     {#each proyectos as p}
       <div class="card">
@@ -129,6 +131,7 @@
   h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 0.5rem; }
   h1 span { color: #f0c000; }
   .sub { color: #888; margin-bottom: 3rem; }
+  .section-title { font-size: 1.8rem; color: #f0c000; margin-bottom: 1.5rem; }
 
   .mv-grid {
     display: grid;
