@@ -8,7 +8,7 @@ const router = Router();
 router.get('/', async (_req, res) => {
   const { data, error } = await supabase
     .from('comments')
-    .select('id, user_name, text, created_at')
+    .select('id, user_id, user_name, text, created_at')
     .order('created_at', { ascending: false })
     .limit(50);
 

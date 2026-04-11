@@ -28,6 +28,16 @@ export async function apiPost(path, body) {
   return res.json();
 }
 
+export async function apiPatch(path, body) {
+  const res = await fetch(`${PUBLIC_API_URL}${path}`, {
+    method: 'PATCH',
+    headers: await getHeaders(),
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error((await res.json()).error || 'Error del servidor');
+  return res.json();
+}
+
 export async function apiDelete(path) {
   const res = await fetch(`${PUBLIC_API_URL}${path}`, {
     method: 'DELETE',

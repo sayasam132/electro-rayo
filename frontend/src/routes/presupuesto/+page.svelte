@@ -1,5 +1,6 @@
 <script>
   import { apiPost } from '$lib/api.js';
+  import { PUBLIC_WA_NUMBER } from '$env/static/public';
 
   let form = {
     nombre: '', telefono: '', email: '',
@@ -25,6 +26,13 @@
     try {
       await apiPost('/presupuesto', form);
       enviado = true;
+      const msg = encodeURIComponent(
+        `Hola! Acabo de enviar una solicitud de presupuesto.\n` +
+        `Nombre: ${form.nombre}\n` +
+        `Teléfono: ${form.telefono}\n` +
+        `Servicio: ${form.servicio}`
+      );
+      window.open(`https://wa.me/${PUBLIC_WA_NUMBER}?text=${msg}`, '_blank');
     } catch (e) {
       error = e.message;
     } finally {
