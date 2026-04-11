@@ -16,9 +16,15 @@
     completado:  { label: 'Completado',  color: '#4ade80' },
   };
 
+  const ADMIN_EMAIL = 'sayasammejia2@gmail.com';
+
   onMount(async () => {
     if (!$user) {
       authModal.set('login');
+      loading = false;
+      return;
+    }
+    if ($user.email !== ADMIN_EMAIL) {
       loading = false;
       return;
     }
@@ -59,6 +65,8 @@
 
   {#if !$user}
     <p class="hint">Debes iniciar sesión para acceder al panel.</p>
+  {:else if $user.email !== ADMIN_EMAIL}
+    <p class="error">Acceso denegado.</p>
   {:else if loading}
     <p class="hint">Cargando...</p>
   {:else if error}
