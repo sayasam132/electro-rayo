@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { user, authModal } from '$lib/auth.js';
-  import { apiGet, apiPatch } from '$lib/api.js';
+  import { supabase } from '$lib/supabase.js';
 
   let presupuestos = [];
   let loading = true;
@@ -28,22 +28,22 @@
   async function cargar() {
     loading = true;
     error = '';
-    try {
-      presupuestos = await apiGet('/presupuesto');
-    } catch (e) {
-      error = e.message;
-    } finally {
-      loading = false;
-    }
+    const { data, error: err } = await supabase
+      .from('presupuestos')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (err) error = err.message;
+    else presupuestos = data;
+    loading = false;
   }
 
   async function cambiarEstado(id, estado) {
-    try {
-      const updated = await apiPatch(`/presupuesto/${id}`, { estado });
-      presupuestos = presupuestos.map(p => p.id === id ? { ...p, estado: updated.estado } : p);
-    } catch (e) {
-      error = e.message;
-    }
+    const { error: err } = await supabase
+      .from('presupuestos')
+      .update({ estado })
+      .eq('id', id);
+    if (err) error = err.message;
+    else presupuestos = presupuestos.map(p => p.id === id ? { ...p, estado } : p);
   }
 
   function fmt(dateStr) {

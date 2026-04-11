@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { user, authModal } from '$lib/auth.js';
-  import { apiGet, apiPost, apiDelete } from '$lib/api.js';
+  import { supabase } from '$lib/supabase.js';
 
   let comments = [];
   let newComment = '';
@@ -18,24 +18,29 @@
   ];
 
   onMount(async () => {
-    try {
-      comments = await apiGet('/comments');
-    } catch (e) {
-      error = 'No se pudieron cargar los comentarios.';
-    }
+    const { data, error: err } = await supabase
+      .from('comments')
+      .select('id, user_id, user_name, text, created_at')
+      .order('created_at', { ascending: false })
+      .limit(50);
+    if (err) error = 'No se pudieron cargar los comentarios.';
+    else comments = data;
   });
 
   async function submitComment() {
-    if (!$user) {
-      authModal.set('login');
-      return;
-    }
+    if (!$user) { authModal.set('login'); return; }
     if (!newComment.trim()) return;
     loading = true;
     error = '';
     try {
-      const c = await apiPost('/comments', { text: newComment.trim() });
-      comments = [c, ...comments];
+      const user_name = $user.user_metadata?.full_name || $user.email?.split('@')[0] || 'Anónimo';
+      const { data, error: err } = await supabase
+        .from('comments')
+        .insert({ user_id: $user.id, user_name, text: newComment.trim() })
+        .select()
+        .single();
+      if (err) throw new Error(err.message);
+      comments = [data, ...comments];
       newComment = '';
     } catch (e) {
       error = e.message;
@@ -45,12 +50,13 @@
   }
 
   async function deleteComment(id) {
-    try {
-      await apiDelete(`/comments/${id}`);
-      comments = comments.filter(c => c.id !== id);
-    } catch (e) {
-      error = e.message;
-    }
+    const { error: err } = await supabase
+      .from('comments')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', $user.id);
+    if (err) error = err.message;
+    else comments = comments.filter(c => c.id !== id);
   }
 </script>
 

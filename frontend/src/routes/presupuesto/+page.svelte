@@ -1,5 +1,5 @@
 <script>
-  import { apiPost } from '$lib/api.js';
+  import { supabase } from '$lib/supabase.js';
   import { PUBLIC_WA_NUMBER } from '$env/static/public';
 
   let form = {
@@ -24,7 +24,8 @@
     }
     loading = true;
     try {
-      await apiPost('/presupuesto', form);
+      const { error: err } = await supabase.from('presupuestos').insert(form);
+      if (err) throw new Error(err.message);
       enviado = true;
       const msg = encodeURIComponent(
         `Hola! Acabo de enviar una solicitud de presupuesto.\n` +
