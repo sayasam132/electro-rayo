@@ -58,6 +58,20 @@
   <h1>Nuestro <span>Portafolio</span></h1>
   <p class="sub">Trabajos realizados con calidad y compromiso</p>
 
+  <!-- Misión y Visión -->
+  <div class="mv-grid">
+    <div class="mv-card">
+      <span class="mv-icon">⚡</span>
+      <h2>Misión</h2>
+      <p>Brindar servicios de instalaciones eléctricas y remodelaciones de alta calidad a familias y negocios de Alajuela, garantizando seguridad, profesionalismo y precios justos. Nos comprometemos a resolver las necesidades de nuestros clientes con puntualidad, honestidad y trabajo garantizado, construyendo relaciones de confianza a largo plazo.</p>
+    </div>
+    <div class="mv-card">
+      <span class="mv-icon">🎯</span>
+      <h2>Visión</h2>
+      <p>Ser la empresa de servicios eléctricos y remodelaciones más confiable y reconocida en Alajuela dentro de los próximos cinco años, expandiendo nuestros servicios a otras zonas del Valle Central y siendo la primera opción que las personas recuerdan cuando necesitan mejorar sus hogares o negocios.</p>
+    </div>
+  </div>
+
   <div class="grid">
     {#each proyectos as p}
       <div class="card">
@@ -115,6 +129,25 @@
   h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 0.5rem; }
   h1 span { color: #f0c000; }
   .sub { color: #888; margin-bottom: 3rem; }
+
+  .mv-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+  @media (max-width: 650px) { .mv-grid { grid-template-columns: 1fr; } }
+  .mv-card {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 2rem;
+    transition: border-color 0.2s;
+  }
+  .mv-card:hover { border-color: #f0c000; }
+  .mv-icon { font-size: 2rem; display: block; margin-bottom: 0.8rem; }
+  .mv-card h2 { color: #f0c000; font-size: 1.3rem; margin-bottom: 0.8rem; }
+  .mv-card p { color: #999; font-size: 0.95rem; line-height: 1.7; }
 
   .grid {
     display: grid;
