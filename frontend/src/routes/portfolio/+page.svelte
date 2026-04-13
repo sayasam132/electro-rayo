@@ -15,8 +15,9 @@
   ];
 
   let galerias = SERVICIOS.map(s => ({ ...s, fotos: [], cargando: true }));
-  let comments = [];
-  let newComment = '';
+  let reviews = [];
+  let newReview = '';
+  let newRating = 5;
   let loading = false;
   let error = '';
 
@@ -39,29 +40,30 @@
   onMount(async () => {
     cargarFotos();
     const { data, error: err } = await supabase
-      .from('comments')
-      .select('id, user_id, user_name, text, created_at')
+      .from('reviews')
+      .select('id, user_id, user_name, rating, text, created_at')
       .order('created_at', { ascending: false })
       .limit(50);
-    if (err) error = 'No se pudieron cargar los comentarios.';
-    else comments = data;
+    if (err) error = 'No se pudieron cargar las reseñas.';
+    else reviews = data;
   });
 
-  async function submitComment() {
+  async function submitReview() {
     if (!$user) { authModal.set('login'); return; }
-    if (!newComment.trim()) return;
+    if (!newReview.trim()) return;
     loading = true;
     error = '';
     try {
       const user_name = $user.user_metadata?.full_name || $user.email?.split('@')[0] || 'Anónimo';
       const { data, error: err } = await supabase
-        .from('comments')
-        .insert({ user_id: $user.id, user_name, text: newComment.trim() })
+        .from('reviews')
+        .insert({ user_id: $user.id, user_name, rating: newRating, text: newReview.trim() })
         .select()
         .single();
       if (err) throw new Error(err.message);
-      comments = [data, ...comments];
-      newComment = '';
+      reviews = [data, ...reviews];
+      newReview = '';
+      newRating = 5;
     } catch (e) {
       error = e.message;
     } finally {
@@ -69,15 +71,15 @@
     }
   }
 
-  async function deleteComment(id) {
+  async function deleteReview(id) {
     const { error: err } = await supabase
-      .from('comments')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', $user.id);
+      .from('reviews').delete().eq('id', id).eq('user_id', $user.id);
     if (err) error = err.message;
-    else comments = comments.filter(c => c.id !== id);
+    else reviews = reviews.filter(r => r.id !== id);
   }
+
+  function stars(n) { return '★'.repeat(n) + '☆'.repeat(5 - n); }
+  $: avgRating = reviews.length ? (reviews.reduce((a, r) => a + r.rating, 0) / reviews.length).toFixed(1) : null;
 </script>
 
 <div class="page">
@@ -119,41 +121,60 @@
     </section>
   {/each}
 
-  <!-- Comentarios -->
-  <section class="comments-section">
-    <h2>Comentarios de clientes</h2>
-
-    <div class="comment-form">
-      <textarea
-        bind:value={newComment}
-        placeholder={$user ? 'Escribe tu comentario...' : 'Inicia sesión para comentar'}
-        rows="3"
-        maxlength="1000"
-      ></textarea>
-      <button class="btn-primary" on:click={submitComment} disabled={loading}>
-        {loading ? 'Publicando...' : 'Publicar comentario'}
-      </button>
-      {#if !$user}
-        <p class="hint">👆 Al publicar se te pedirá iniciar sesión</p>
+  <!-- Reseñas -->
+  <section class="reviews-section">
+    <div class="reviews-header">
+      <h2>Reseñas de clientes</h2>
+      {#if avgRating}
+        <div class="avg-rating">
+          <span class="avg-num">{avgRating}</span>
+          <span class="avg-stars">{stars(Math.round(avgRating))}</span>
+          <span class="avg-count">({reviews.length} reseña{reviews.length !== 1 ? 's' : ''})</span>
+        </div>
       {/if}
+    </div>
+
+    <div class="review-form">
+      <div class="star-selector">
+        <span class="star-label">Tu puntuación:</span>
+        {#each [1,2,3,4,5] as n}
+          <button
+            class="star-btn"
+            class:active={newRating >= n}
+            on:click={() => newRating = n}
+            aria-label="{n} estrellas"
+          >★</button>
+        {/each}
+      </div>
+      <textarea
+        bind:value={newReview}
+        placeholder={$user ? 'Cuéntanos tu experiencia...' : 'Inicia sesión para dejar una reseña'}
+        rows="3"
+        maxlength="500"
+      ></textarea>
+      <button class="btn-primary" on:click={submitReview} disabled={loading}>
+        {loading ? 'Publicando...' : 'Publicar reseña'}
+      </button>
+      {#if !$user}<p class="hint">👆 Al publicar se te pedirá iniciar sesión</p>{/if}
     </div>
 
     {#if error}<p class="error">{error}</p>{/if}
 
-    <div class="comments-list">
-      {#if comments.length === 0}
-        <p class="empty">Sé el primero en comentar.</p>
+    <div class="reviews-list">
+      {#if reviews.length === 0}
+        <p class="empty">Sé el primero en dejar una reseña.</p>
       {:else}
-        {#each comments as c}
-          <div class="comment">
-            <div class="comment-header">
-              <strong>{c.user_name}</strong>
-              <span class="date">{new Date(c.created_at).toLocaleDateString('es-CR')}</span>
-              {#if $user?.id === c.user_id}
-                <button class="btn-delete" on:click={() => deleteComment(c.id)}>✕</button>
+        {#each reviews as r}
+          <div class="review-card">
+            <div class="review-top">
+              <strong>{r.user_name}</strong>
+              <span class="r-stars">{stars(r.rating)}</span>
+              <span class="date">{new Date(r.created_at).toLocaleDateString('es-CR')}</span>
+              {#if $user?.id === r.user_id}
+                <button class="btn-delete" on:click={() => deleteReview(r.id)}>✕</button>
               {/if}
             </div>
-            <p>{c.text}</p>
+            <p>{r.text}</p>
           </div>
         {/each}
       {/if}
@@ -226,10 +247,23 @@
     display: block;
   }
 
-  .comments-section { border-top: 1px solid #222; padding-top: 3rem; }
-  .comments-section h2 { font-size: 1.6rem; color: #f0c000; margin-bottom: 1.5rem; }
+  .reviews-section { border-top: 1px solid #222; padding-top: 3rem; }
+  .reviews-header { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .reviews-header h2 { font-size: 1.6rem; color: #f0c000; }
+  .avg-rating { display: flex; align-items: center; gap: 0.5rem; }
+  .avg-num { font-size: 1.8rem; font-weight: 900; color: #f0c000; }
+  .avg-stars { color: #f0c000; font-size: 1.1rem; }
+  .avg-count { color: #666; font-size: 0.85rem; }
 
-  .comment-form { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem; }
+  .review-form { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem; }
+  .star-selector { display: flex; align-items: center; gap: 0.3rem; }
+  .star-label { color: #888; font-size: 0.9rem; margin-right: 0.3rem; }
+  .star-btn {
+    background: none; border: none; font-size: 1.6rem;
+    color: #333; cursor: pointer; transition: color 0.15s; line-height: 1;
+  }
+  .star-btn.active { color: #f0c000; }
+
   textarea {
     background: #111; border: 1px solid #333; color: #fff;
     border-radius: 8px; padding: 0.8rem; font-size: 1rem;
@@ -245,10 +279,11 @@
   .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
   .hint { color: #666; font-size: 0.85rem; }
 
-  .comments-list { display: flex; flex-direction: column; gap: 1rem; }
-  .comment { background: #111; border: 1px solid #222; border-radius: 8px; padding: 1rem; }
-  .comment-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.5rem; }
-  .comment-header strong { color: #f0c000; }
+  .reviews-list { display: flex; flex-direction: column; gap: 1rem; }
+  .review-card { background: #111; border: 1px solid #222; border-radius: 8px; padding: 1rem; }
+  .review-top { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+  .review-top strong { color: #f0c000; }
+  .r-stars { color: #f0c000; font-size: 0.95rem; }
   .date { color: #666; font-size: 0.8rem; margin-left: auto; }
   .btn-delete { background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 0.9rem; }
   .empty { color: #555; font-style: italic; }

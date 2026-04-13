@@ -19,6 +19,36 @@ router.post('/', async (req, res) => {
     .single();
 
   if (error) return res.status(500).json({ error: error.message });
+
+  // Notificación email al admin (no bloqueante)
+  if (process.env.RESEND_API_KEY) {
+    fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'Electro Rayo <onboarding@resend.dev>',
+        to: process.env.ADMIN_EMAIL || 'sayasammejia2@gmail.com',
+        subject: `⚡ Nuevo presupuesto de ${nombre}`,
+        html: `
+          <h2>Nueva solicitud de presupuesto</h2>
+          <table>
+            <tr><td><strong>Nombre:</strong></td><td>${nombre}</td></tr>
+            <tr><td><strong>Teléfono:</strong></td><td>${telefono}</td></tr>
+            <tr><td><strong>Email:</strong></td><td>${email || '—'}</td></tr>
+            <tr><td><strong>Servicio:</strong></td><td>${servicio}</td></tr>
+            <tr><td><strong>Zona:</strong></td><td>${zona || '—'}</td></tr>
+            <tr><td><strong>Inmueble:</strong></td><td>${inmueble || '—'}</td></tr>
+            <tr><td><strong>Descripción:</strong></td><td>${descripcion || '—'}</td></tr>
+          </table>
+          <p><a href="https://electro-rayo.onrender.com/admin">Ver en el panel admin</a></p>
+        `
+      })
+    }).catch(err => console.error('Email error:', err));
+  }
+
   res.status(201).json({ ok: true, id: data.id });
 });
 

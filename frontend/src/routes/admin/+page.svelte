@@ -28,9 +28,26 @@
   ];
 
   let galerias = SERVICIOS.map(s => ({ ...s, fotos: [], cargando: false, subiendo: false, errorG: '' }));
-  let seccionActiva = 'presupuestos'; // 'presupuestos' | 'galeria'
+  let seccionActiva = 'presupuestos'; // 'presupuestos' | 'galeria' | 'stats'
 
   const ADMIN_EMAIL = 'sayasammejia2@gmail.com';
+
+  // ── Estadísticas reactivas ────────────────────────────────────
+  $: porEstado = ESTADOS.map(e => ({
+    label: ESTADO_LABEL[e].label, color: ESTADO_LABEL[e].color,
+    count: presupuestos.filter(p => p.estado === e).length,
+  }));
+  $: porServicio = [...new Set(presupuestos.map(p => p.servicio))]
+    .map(s => ({ servicio: s, count: presupuestos.filter(p => p.servicio === s).length }))
+    .sort((a, b) => b.count - a.count).slice(0, 8);
+  $: porMes = (() => {
+    const meses = {};
+    presupuestos.forEach(p => { const k = p.created_at.slice(0, 7); meses[k] = (meses[k] || 0) + 1; });
+    return Object.entries(meses).sort().slice(-6)
+      .map(([mes, count]) => ({ mes: new Date(mes + '-01').toLocaleDateString('es-CR', { month: 'short', year: '2-digit' }), count }));
+  })();
+  $: maxMes  = Math.max(...porMes.map(m => m.count), 1);
+  $: maxServ = Math.max(...porServicio.map(s => s.count), 1);
 
   onMount(async () => {
     if (!$user) { authModal.set('login'); loadingP = false; return; }
@@ -114,6 +131,9 @@
     <button class:active={seccionActiva === 'galeria'} on:click={() => seccionActiva = 'galeria'}>
       🖼️ Galería de fotos
     </button>
+    <button class:active={seccionActiva === 'stats'} on:click={() => seccionActiva = 'stats'}>
+      📊 Estadísticas
+    </button>
   </div>
 
   {#if !$user}
@@ -181,6 +201,59 @@
         </div>
       {/if}
     {/if}
+
+  <!-- ── ESTADÍSTICAS ── -->
+  {:else if seccionActiva === 'stats'}
+    <div class="stats-page">
+      <div class="stats-row">
+        <div class="stat-big">
+          <span class="stat-big-num">{presupuestos.length}</span>
+          <span class="stat-big-label">Total solicitudes</span>
+        </div>
+        {#each porEstado as e}
+          <div class="stat-big">
+            <span class="stat-big-num" style="color:{e.color}">{e.count}</span>
+            <span class="stat-big-label">{e.label}</span>
+          </div>
+        {/each}
+      </div>
+
+      {#if porMes.length > 0}
+        <div class="chart-bloque">
+          <h3>Solicitudes por mes</h3>
+          <div class="bar-chart">
+            {#each porMes as m}
+              <div class="bar-col">
+                <span class="bar-val">{m.count}</span>
+                <div class="bar" style="height:{Math.round((m.count/maxMes)*120)}px"></div>
+                <span class="bar-label">{m.mes}</span>
+              </div>
+            {/each}
+          </div>
+        </div>
+      {/if}
+
+      {#if porServicio.length > 0}
+        <div class="chart-bloque">
+          <h3>Por tipo de servicio</h3>
+          <div class="hbar-list">
+            {#each porServicio as s}
+              <div class="hbar-row">
+                <span class="hbar-label">{s.servicio}</span>
+                <div class="hbar-track">
+                  <div class="hbar-fill" style="width:{Math.round((s.count/maxServ)*100)}%"></div>
+                </div>
+                <span class="hbar-num">{s.count}</span>
+              </div>
+            {/each}
+          </div>
+        </div>
+      {/if}
+
+      {#if presupuestos.length === 0}
+        <p class="hint">Aún no hay solicitudes para mostrar estadísticas.</p>
+      {/if}
+    </div>
 
   <!-- ── GALERÍA ── -->
   {:else}
@@ -264,6 +337,32 @@
   select option { color: #fff; }
   .desc-row td { padding: 0.3rem 1rem 0.8rem; color: #888; font-size: 0.85rem; border-top: none; }
   .desc-label { color: #555; font-weight: 600; }
+
+  /* Estadísticas */
+  .stats-page { display: flex; flex-direction: column; gap: 2rem; }
+  .stats-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .stat-big {
+    background: #111; border: 1px solid #222; border-radius: 10px;
+    padding: 1.2rem 1.8rem; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+  }
+  .stat-big-num { font-size: 2.5rem; font-weight: 900; color: #f0c000; }
+  .stat-big-label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .chart-bloque { background: #0d0d0d; border: 1px solid #1e1e1e; border-radius: 12px; padding: 1.5rem; }
+  .chart-bloque h3 { color: #f0c000; font-size: 1rem; margin-bottom: 1.2rem; }
+
+  .bar-chart { display: flex; align-items: flex-end; gap: 1rem; height: 160px; padding-bottom: 1.5rem; position: relative; }
+  .bar-col { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; flex: 1; }
+  .bar-val { font-size: 0.8rem; color: #f0c000; font-weight: 700; }
+  .bar { background: #f0c000; border-radius: 4px 4px 0 0; width: 100%; min-height: 4px; transition: height 0.3s; }
+  .bar-label { font-size: 0.75rem; color: #666; white-space: nowrap; }
+
+  .hbar-list { display: flex; flex-direction: column; gap: 0.7rem; }
+  .hbar-row { display: grid; grid-template-columns: 180px 1fr 40px; align-items: center; gap: 0.8rem; }
+  .hbar-label { font-size: 0.85rem; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hbar-track { background: #1a1a1a; border-radius: 4px; height: 10px; overflow: hidden; }
+  .hbar-fill { background: #f0c000; height: 100%; border-radius: 4px; transition: width 0.3s; }
+  .hbar-num { font-size: 0.85rem; color: #f0c000; font-weight: 700; text-align: right; }
 
   /* Galería */
   .galerias { display: flex; flex-direction: column; gap: 2.5rem; }
