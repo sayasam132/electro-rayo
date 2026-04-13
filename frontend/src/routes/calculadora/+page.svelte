@@ -1,67 +1,51 @@
 <script>
-  const categorias = [
-    {
-      nombre: 'Instalaciones eléctricas',
-      items: [
-        { nombre: 'Tomacorriente doble',       precio: 15000 },
-        { nombre: 'Tomacorriente GFCI (baño)', precio: 22000 },
-        { nombre: 'Interruptor sencillo',       precio: 8000  },
-        { nombre: 'Interruptor doble',          precio: 12000 },
-        { nombre: 'Punto eléctrico nuevo',      precio: 35000 },
-        { nombre: 'Metro de cableado',          precio: 3500  },
-      ]
-    },
-    {
-      nombre: 'Paneles y breakers',
-      items: [
-        { nombre: 'Breaker 15A',             precio: 12000  },
-        { nombre: 'Breaker 20A',             precio: 14000  },
-        { nombre: 'Breaker 30A (A/C)',       precio: 18000  },
-        { nombre: 'Cambio de panel 100A',    precio: 250000 },
-        { nombre: 'Cambio de panel 200A',    precio: 380000 },
-        { nombre: 'Tierra física (varilla)', precio: 45000  },
-      ]
-    },
-    {
-      nombre: 'Iluminación',
-      items: [
-        { nombre: 'Luminaria LED 12W',        precio: 18000 },
-        { nombre: 'Luminaria LED 18W',        precio: 25000 },
-        { nombre: 'Lámpara de techo (inst.)', precio: 12000 },
-        { nombre: 'Reflector exterior LED',   precio: 35000 },
-        { nombre: 'Tira LED por metro',       precio: 8000  },
-      ]
-    },
-    {
-      nombre: 'Remodelaciones',
-      items: [
-        { nombre: 'Pared de Durock (m²)',     precio: 25000  },
-        { nombre: 'Repello fino (m²)',         precio: 18000  },
-        { nombre: 'Porcelanato (m²)',          precio: 22000  },
-        { nombre: 'Cielo raso (m²)',           precio: 20000  },
-        { nombre: 'Pintura cuarto completo',   precio: 85000  },
-        { nombre: 'Instalación puerta',        precio: 55000  },
-      ]
-    },
+  let items = [
+    // Instalaciones eléctricas
+    { cat: 'Instalaciones eléctricas', nombre: 'Tomacorriente doble',       precio: 15000, qty: 0 },
+    { cat: 'Instalaciones eléctricas', nombre: 'Tomacorriente GFCI (baño)', precio: 22000, qty: 0 },
+    { cat: 'Instalaciones eléctricas', nombre: 'Interruptor sencillo',       precio: 8000,  qty: 0 },
+    { cat: 'Instalaciones eléctricas', nombre: 'Interruptor doble',          precio: 12000, qty: 0 },
+    { cat: 'Instalaciones eléctricas', nombre: 'Punto eléctrico nuevo',      precio: 35000, qty: 0 },
+    { cat: 'Instalaciones eléctricas', nombre: 'Metro de cableado',          precio: 3500,  qty: 0 },
+    // Paneles y breakers
+    { cat: 'Paneles y breakers', nombre: 'Breaker 15A',             precio: 12000,  qty: 0 },
+    { cat: 'Paneles y breakers', nombre: 'Breaker 20A',             precio: 14000,  qty: 0 },
+    { cat: 'Paneles y breakers', nombre: 'Breaker 30A (A/C)',       precio: 18000,  qty: 0 },
+    { cat: 'Paneles y breakers', nombre: 'Cambio de panel 100A',    precio: 250000, qty: 0 },
+    { cat: 'Paneles y breakers', nombre: 'Cambio de panel 200A',    precio: 380000, qty: 0 },
+    { cat: 'Paneles y breakers', nombre: 'Tierra física (varilla)', precio: 45000,  qty: 0 },
+    // Iluminación
+    { cat: 'Iluminación', nombre: 'Luminaria LED 12W',        precio: 18000, qty: 0 },
+    { cat: 'Iluminación', nombre: 'Luminaria LED 18W',        precio: 25000, qty: 0 },
+    { cat: 'Iluminación', nombre: 'Lámpara de techo (inst.)', precio: 12000, qty: 0 },
+    { cat: 'Iluminación', nombre: 'Reflector exterior LED',   precio: 35000, qty: 0 },
+    { cat: 'Iluminación', nombre: 'Tira LED por metro',       precio: 8000,  qty: 0 },
+    // Remodelaciones
+    { cat: 'Remodelaciones', nombre: 'Pared de Durock (m²)',   precio: 25000, qty: 0 },
+    { cat: 'Remodelaciones', nombre: 'Repello fino (m²)',       precio: 18000, qty: 0 },
+    { cat: 'Remodelaciones', nombre: 'Porcelanato (m²)',        precio: 22000, qty: 0 },
+    { cat: 'Remodelaciones', nombre: 'Cielo raso (m²)',         precio: 20000, qty: 0 },
+    { cat: 'Remodelaciones', nombre: 'Pintura cuarto completo', precio: 85000, qty: 0 },
+    { cat: 'Remodelaciones', nombre: 'Instalación puerta',      precio: 55000, qty: 0 },
   ];
 
-  // Estado reactivo: qty por ítem (clave: "catIdx-itemIdx")
-  let qtys = {};
+  const categorias = ['Instalaciones eléctricas', 'Paneles y breakers', 'Iluminación', 'Remodelaciones'];
 
-  function qty(ci, ii) { return qtys[`${ci}-${ii}`] || 0; }
-  function setQty(ci, ii, v) { qtys = { ...qtys, [`${ci}-${ii}`]: Math.max(0, v) }; }
+  function cambiar(i, delta) {
+    items[i].qty = Math.max(0, items[i].qty + delta);
+    items = [...items];
+  }
 
-  $: lineas = categorias.flatMap((cat, ci) =>
-    cat.items
-      .map((item, ii) => ({ ...item, qty: qty(ci, ii), ci, ii }))
-      .filter(l => l.qty > 0)
-  );
-  $: subtotal  = lineas.reduce((a, l) => a + l.qty * l.precio, 0);
-  $: manoObra  = subtotal * 0.35;
-  $: total     = subtotal + manoObra;
+  function reset() {
+    items = items.map(i => ({ ...i, qty: 0 }));
+  }
+
+  $: subtotal = items.reduce((a, i) => a + i.qty * i.precio, 0);
+  $: manoObra = subtotal * 0.35;
+  $: total    = subtotal + manoObra;
+  $: lineas   = items.filter(i => i.qty > 0);
 
   function fmt(n) { return '₡' + Math.round(n).toLocaleString('es-CR'); }
-  function reset() { qtys = {}; }
 </script>
 
 <div class="page">
@@ -70,20 +54,22 @@
 
   <div class="layout">
     <div class="items-col">
-      {#each categorias as cat, ci}
+      {#each categorias as cat}
         <div class="categoria">
-          <h3>{cat.nombre}</h3>
-          {#each cat.items as item, ii}
-            <div class="row" class:activo={qty(ci,ii) > 0}>
-              <span class="item-nombre">{item.nombre}</span>
-              <span class="item-precio">{fmt(item.precio)}</span>
-              <div class="qty-ctrl">
-                <button on:click={() => setQty(ci, ii, qty(ci,ii) - 1)}>−</button>
-                <span>{qty(ci,ii)}</span>
-                <button on:click={() => setQty(ci, ii, qty(ci,ii) + 1)}>+</button>
+          <h3>{cat}</h3>
+          {#each items as item, i}
+            {#if item.cat === cat}
+              <div class="row" class:activo={item.qty > 0}>
+                <span class="item-nombre">{item.nombre}</span>
+                <span class="item-precio">{fmt(item.precio)}</span>
+                <div class="qty-ctrl">
+                  <button on:click={() => cambiar(i, -1)}>−</button>
+                  <span>{item.qty}</span>
+                  <button on:click={() => cambiar(i, 1)}>+</button>
+                </div>
+                <span class="item-sub">{item.qty > 0 ? fmt(item.qty * item.precio) : '—'}</span>
               </div>
-              <span class="item-sub">{qty(ci,ii) > 0 ? fmt(qty(ci,ii) * item.precio) : '—'}</span>
-            </div>
+            {/if}
           {/each}
         </div>
       {/each}
@@ -174,17 +160,13 @@
   .separador { border-top: 1px solid #222; margin: 0.2rem 0; }
 
   .linea { display: flex; justify-content: space-between; color: #bbb; font-size: 0.95rem; }
-  .linea.total {
-    border-top: 1px solid #333; padding-top: 0.8rem;
-    color: #fff; font-size: 1.1rem;
-  }
+  .linea.total { border-top: 1px solid #333; padding-top: 0.8rem; color: #fff; font-size: 1.1rem; }
   .linea.total strong { color: #f0c000; font-size: 1.3rem; }
   .nota { font-size: 0.75rem; color: #555; line-height: 1.4; }
 
   .btn-primary {
     display: block; text-align: center; background: #f0c000; color: #000;
-    font-weight: 700; padding: 0.8rem; border-radius: 8px; font-size: 1rem;
-    transition: opacity 0.2s;
+    font-weight: 700; padding: 0.8rem; border-radius: 8px; font-size: 1rem; transition: opacity 0.2s;
   }
   .btn-primary:hover { opacity: 0.85; }
   .btn-reset {
