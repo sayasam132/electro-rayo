@@ -3,21 +3,41 @@
   import { user, authModal } from '$lib/auth.js';
   import { supabase } from '$lib/supabase.js';
 
+  const BUCKET = 'fotos-servicios';
+
+  const SERVICIOS = [
+    { slug: 'instalaciones-electricas', icon: '🔌', nombre: 'Instalaciones eléctricas' },
+    { slug: 'remodelaciones',           icon: '🏗️', nombre: 'Remodelaciones' },
+    { slug: 'iluminacion-led',          icon: '💡', nombre: 'Iluminación LED' },
+    { slug: 'mantenimiento',            icon: '🔧', nombre: 'Mantenimiento' },
+    { slug: 'diseno-electrico',         icon: '📐', nombre: 'Diseño eléctrico' },
+    { slug: 'construccion-menor',       icon: '🏠', nombre: 'Construcción menor' },
+  ];
+
+  let galerias = SERVICIOS.map(s => ({ ...s, fotos: [], cargando: true }));
   let comments = [];
   let newComment = '';
   let loading = false;
   let error = '';
 
-  const proyectos = [
-    { img: '🏠', title: 'Remodelación cocina - San José', desc: 'Cambio completo de instalación eléctrica e iluminación LED.' },
-    { img: '🔌', title: 'Panel eléctrico - Heredia', desc: 'Sustitución de panel de 100A a 200A con breakers nuevos.' },
-    { img: '💡', title: 'Iluminación comercial - Alajuela', desc: 'Instalación de 80 luminarias LED en bodega industrial.' },
-    { img: '🏗️', title: 'Ampliación - Cartago', desc: 'Construcción de cuarto extra con instalación eléctrica completa.' },
-    { img: '🔧', title: 'Mantenimiento - San Carlos', desc: 'Revisión y reparación de sistema eléctrico residencial.' },
-    { img: '📐', title: 'Proyecto nuevo - Limón', desc: 'Diseño y ejecución eléctrica para casa de 200m².' },
-  ];
+  function publicUrl(path) {
+    return supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+  }
+
+  async function cargarFotos() {
+    galerias = await Promise.all(
+      SERVICIOS.map(async (s) => {
+        const { data } = await supabase.storage.from(BUCKET).list(s.slug, { sortBy: { column: 'created_at', order: 'asc' } });
+        const fotos = (data || [])
+          .filter(f => f.name !== '.emptydir')
+          .map(f => ({ src: publicUrl(`${s.slug}/${f.name}`), name: f.name }));
+        return { ...s, fotos, cargando: false };
+      })
+    );
+  }
 
   onMount(async () => {
+    cargarFotos();
     const { data, error: err } = await supabase
       .from('comments')
       .select('id, user_id, user_name, text, created_at')
@@ -80,15 +100,24 @@
 
   <h2 class="section-title">Proyectos realizados</h2>
 
-  <div class="grid">
-    {#each proyectos as p}
-      <div class="card">
-        <div class="card-img">{p.img}</div>
-        <h3>{p.title}</h3>
-        <p>{p.desc}</p>
-      </div>
-    {/each}
-  </div>
+  {#each galerias as g}
+    <section class="galeria-seccion" id={g.slug}>
+      <h3 class="galeria-titulo"><span>{g.icon}</span> {g.nombre}</h3>
+      {#if g.cargando}
+        <p class="sin-fotos">Cargando...</p>
+      {:else if g.fotos.length === 0}
+        <p class="sin-fotos">Fotos próximamente...</p>
+      {:else}
+        <div class="fotos-grid">
+          {#each g.fotos as foto}
+            <div class="foto-card">
+              <img src={foto.src} alt={foto.name} loading="lazy" />
+            </div>
+          {/each}
+        </div>
+      {/if}
+    </section>
+  {/each}
 
   <!-- Comentarios -->
   <section class="comments-section">
@@ -158,17 +187,44 @@
   .mv-card h2 { color: #f0c000; font-size: 1.3rem; margin-bottom: 0.8rem; }
   .mv-card p { color: #999; font-size: 0.95rem; line-height: 1.7; }
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 4rem;
+  .galeria-seccion {
+    margin-bottom: 3.5rem;
+    scroll-margin-top: 80px;
   }
-  .card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; }
-  .card:hover { border-color: #f0c000; }
-  .card-img { font-size: 3rem; margin-bottom: 1rem; }
-  .card h3 { margin-bottom: 0.5rem; color: #f0c000; }
-  .card p { color: #888; font-size: 0.9rem; }
+  .galeria-titulo {
+    font-size: 1.4rem;
+    color: #f0c000;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid #222;
+    padding-bottom: 0.6rem;
+  }
+  .sin-fotos {
+    color: #555;
+    font-style: italic;
+    padding: 1rem 0;
+  }
+  .fotos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .foto-card {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .foto-card:hover { border-color: #f0c000; }
+  .foto-card img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+  }
 
   .comments-section { border-top: 1px solid #222; padding-top: 3rem; }
   .comments-section h2 { font-size: 1.6rem; color: #f0c000; margin-bottom: 1.5rem; }

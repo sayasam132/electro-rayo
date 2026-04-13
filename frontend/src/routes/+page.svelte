@@ -19,11 +19,11 @@
   <h2>Nuestros servicios</h2>
   <div class="grid">
     {#each servicios as s}
-      <div class="card">
+      <a class="card" href="/portfolio#{s.slug}">
         <span class="icon">{s.icon}</span>
         <h3>{s.name}</h3>
         <p>{s.desc}</p>
-      </div>
+      </a>
     {/each}
   </div>
 </section>
@@ -36,12 +36,12 @@
 
 <script context="module">
   const servicios = [
-    { icon: '🔌', name: 'Instalaciones eléctricas', desc: 'Residencial y comercial. Paneles, tomacorrientes, iluminación.' },
-    { icon: '🏗️', name: 'Remodelaciones', desc: 'Cocinas, baños, paredes, pisos. Transformamos tu espacio.' },
-    { icon: '💡', name: 'Iluminación LED', desc: 'Ahorra energía con soluciones LED modernas y eficientes.' },
-    { icon: '🔧', name: 'Mantenimiento', desc: 'Revisiones periódicas y reparaciones de emergencia.' },
-    { icon: '📐', name: 'Diseño eléctrico', desc: 'Planos y cálculos para proyectos nuevos.' },
-    { icon: '🏠', name: 'Construcción menor', desc: 'Ampliaciones, cuartos, garajes y más.' },
+    { icon: '🔌', name: 'Instalaciones eléctricas', desc: 'Residencial y comercial. Paneles, tomacorrientes, iluminación.', slug: 'instalaciones-electricas' },
+    { icon: '🏗️', name: 'Remodelaciones', desc: 'Cocinas, baños, paredes, pisos. Transformamos tu espacio.', slug: 'remodelaciones' },
+    { icon: '💡', name: 'Iluminación LED', desc: 'Ahorra energía con soluciones LED modernas y eficientes.', slug: 'iluminacion-led' },
+    { icon: '🔧', name: 'Mantenimiento', desc: 'Revisiones periódicas y reparaciones de emergencia.', slug: 'mantenimiento' },
+    { icon: '📐', name: 'Diseño eléctrico', desc: 'Planos y cálculos para proyectos nuevos.', slug: 'diseno-electrico' },
+    { icon: '🏠', name: 'Construcción menor', desc: 'Ampliaciones, cuartos, garajes y más.', slug: 'construccion-menor' },
   ];
 </script>
 
@@ -87,9 +87,13 @@
     border: 1px solid #222;
     border-radius: 12px;
     padding: 1.5rem;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, transform 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    cursor: pointer;
   }
-  .card:hover { border-color: #f0c000; }
+  .card:hover { border-color: #f0c000; transform: translateY(-3px); }
   .icon { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
   .card h3 { margin-bottom: 0.5rem; }
   .card p { color: #888; font-size: 0.9rem; line-height: 1.5; }

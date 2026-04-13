@@ -50,3 +50,31 @@ create policy "presupuestos_insert_public"
 create index if not exists comments_created_at_idx on comments(created_at desc);
 create index if not exists presupuestos_estado_idx  on presupuestos(estado);
 create index if not exists presupuestos_created_idx on presupuestos(created_at desc);
+
+
+-- ─── STORAGE: fotos-servicios ───────────────────────────────────
+-- Ejecutar en: Supabase > SQL Editor
+insert into storage.buckets (id, name, public)
+values ('fotos-servicios', 'fotos-servicios', true)
+on conflict (id) do nothing;
+
+-- Cualquiera puede ver las fotos (bucket público)
+create policy "fotos_read_public"
+  on storage.objects for select
+  using ( bucket_id = 'fotos-servicios' );
+
+-- Solo el admin autenticado puede subir fotos
+create policy "fotos_insert_admin"
+  on storage.objects for insert
+  with check (
+    bucket_id = 'fotos-servicios'
+    and auth.email() = 'sayasammejia2@gmail.com'
+  );
+
+-- Solo el admin puede borrar fotos
+create policy "fotos_delete_admin"
+  on storage.objects for delete
+  using (
+    bucket_id = 'fotos-servicios'
+    and auth.email() = 'sayasammejia2@gmail.com'
+  );
