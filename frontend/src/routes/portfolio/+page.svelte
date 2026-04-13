@@ -86,18 +86,80 @@
   <h1>Nuestro <span>Portafolio</span></h1>
   <p class="sub">Trabajos realizados con calidad y compromiso</p>
 
+  <!-- Quiénes somos -->
+  <div class="sobre-grid">
+    <div class="sobre-texto">
+      <h2>Tu Electricista de Confianza en Alajuela</h2>
+      <p>Electro Rayo nació de la pasión por resolver problemas eléctricos y mejorar espacios. Como electricista con años de experiencia en Alajuela, fundé esta empresa con un objetivo claro: ofrecer servicios de calidad a precios justos.</p>
+      <p>Hoy trabajamos en hogares y negocios de toda la zona, desde una simple instalación de tomacorriente hasta remodelaciones completas. Lo que nos motiva es ver la satisfacción de nuestros clientes cuando ven su espacio transformado y funcionando perfectamente.</p>
+      <p class="firma">— Samuel Mejía Saquic, Fundador y Electricista Principal</p>
+    </div>
+    <div class="por-que">
+      <h2>¿Por qué elegirnos?</h2>
+      <ul class="beneficios">
+        <li>✅ <strong>Precios transparentes</strong> — Cotizaciones claras sin sorpresas</li>
+        <li>✅ <strong>Garantía por escrito</strong> — 6 meses en instalaciones eléctricas</li>
+        <li>✅ <strong>Puntualidad garantizada</strong> — Respetamos tu tiempo</li>
+        <li>✅ <strong>Trabajo profesional</strong> — Herramientas adecuadas, resultados impecables</li>
+        <li>✅ <strong>Cobertura local</strong> — Alajuela centro, La Guácima, San Antonio, Carrizal</li>
+        <li>✅ <strong>Atención personalizada</strong> — Cada cliente es importante</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Números -->
+  <div class="numeros">
+    <div class="numero-card"><span class="numero-val">100+</span><span class="numero-label">Proyectos completados</span></div>
+    <div class="numero-card"><span class="numero-val">⭐ 5</span><span class="numero-label">Estrellas de satisfacción</span></div>
+    <div class="numero-card"><span class="numero-val">24/7</span><span class="numero-label">Emergencias atendidas</span></div>
+    <div class="numero-card"><span class="numero-val">6m</span><span class="numero-label">Garantía escrita</span></div>
+    <div class="numero-card"><span class="numero-val">5+</span><span class="numero-label">Zonas de cobertura</span></div>
+  </div>
+
+  <!-- Cómo trabajamos -->
+  <h2 class="section-title">Cómo trabajamos</h2>
+  <div class="proceso">
+    <div class="paso"><span class="paso-num">1</span><span class="paso-icon">📱</span><strong>Contacto inicial</strong><p>Nos escribís por WhatsApp. Te respondemos en menos de 2 horas.</p></div>
+    <div class="paso-sep">→</div>
+    <div class="paso"><span class="paso-num">2</span><span class="paso-icon">📋</span><strong>Cotización gratis</strong><p>Visitamos tu lugar y te damos un presupuesto claro.</p></div>
+    <div class="paso-sep">→</div>
+    <div class="paso"><span class="paso-num">3</span><span class="paso-icon">📅</span><strong>Acordamos fecha</strong><p>Elegimos juntos el mejor día y hora.</p></div>
+    <div class="paso-sep">→</div>
+    <div class="paso"><span class="paso-num">4</span><span class="paso-icon">🔧</span><strong>Ejecutamos</strong><p>Llegamos puntuales, trabajamos y dejamos todo limpio.</p></div>
+    <div class="paso-sep">→</div>
+    <div class="paso"><span class="paso-num">5</span><span class="paso-icon">✅</span><strong>Garantía</strong><p>Entregamos garantía por escrito y seguimos disponibles.</p></div>
+  </div>
+
   <!-- Misión y Visión -->
   <div class="mv-grid">
     <div class="mv-card">
       <span class="mv-icon">⚡</span>
       <h2>Misión</h2>
-      <p>Brindar servicios de instalaciones eléctricas y remodelaciones de alta calidad a familias y negocios de Alajuela, garantizando seguridad, profesionalismo y precios justos. Nos comprometemos a resolver las necesidades de nuestros clientes con puntualidad, honestidad y trabajo garantizado, construyendo relaciones de confianza a largo plazo.</p>
+      <p>Brindar servicios de instalaciones eléctricas y remodelaciones de alta calidad a familias y negocios de Alajuela, garantizando seguridad, profesionalismo y precios justos.</p>
     </div>
     <div class="mv-card">
       <span class="mv-icon">🎯</span>
       <h2>Visión</h2>
-      <p>Ser la empresa de servicios eléctricos y remodelaciones más confiable y reconocida en Alajuela dentro de los próximos cinco años, expandiendo nuestros servicios a otras zonas del Valle Central y siendo la primera opción que las personas recuerdan cuando necesitan mejorar sus hogares o negocios.</p>
+      <p>Ser la empresa de servicios eléctricos y remodelaciones más confiable y reconocida en Alajuela, expandiendo nuestros servicios a otras zonas del Valle Central.</p>
     </div>
+    <div class="mv-card">
+      <span class="mv-icon">💡</span>
+      <h2>Filosofía</h2>
+      <p>No tomamos atajos. No usamos materiales de baja calidad. Cada instalación la hacemos pensando: "¿Dejaría esto en la casa de mi familia?" Si la respuesta es no, lo hacemos mejor.</p>
+    </div>
+    <div class="mv-card">
+      <span class="mv-icon">🤝</span>
+      <h2>Compromiso</h2>
+      <p>Llegar puntual, explicar claramente el trabajo, usar materiales de calidad, dejar el área limpia y responder tus dudas con paciencia. Tu tranquilidad es nuestra prioridad.</p>
+    </div>
+  </div>
+
+  <!-- Testimonios -->
+  <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+  <div class="testimonios">
+    <div class="testimonio"><p>"Samuel llegó puntual, explicó todo con claridad y dejó mi instalación eléctrica impecable. Recomendado 100%."</p><span>— María G., La Guácima</span></div>
+    <div class="testimonio"><p>"Excelente trabajo en la pintura de mi casa. Profesionales y honestos con los precios."</p><span>— Carlos R., Alajuela Centro</span></div>
+    <div class="testimonio"><p>"Resolvieron mi emergencia eléctrica un domingo. Servicio rápido y efectivo."</p><span>— Ana P., San Antonio</span></div>
   </div>
 
   <h2 class="section-title">Proyectos realizados</h2>
@@ -188,6 +250,41 @@
   h1 span { color: #f0c000; }
   .sub { color: #888; margin-bottom: 3rem; }
   .section-title { font-size: 1.8rem; color: #f0c000; margin-bottom: 1.5rem; }
+
+  /* Sobre nosotros */
+  .sobre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
+  @media (max-width: 700px) { .sobre-grid { grid-template-columns: 1fr; } }
+  .sobre-texto h2, .por-que h2 { font-size: 1.4rem; color: #f0c000; margin-bottom: 1rem; }
+  .sobre-texto p { color: #999; line-height: 1.8; margin-bottom: 0.8rem; font-size: 0.95rem; }
+  .firma { color: #666 !important; font-style: italic; font-size: 0.85rem !important; }
+  .por-que { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; }
+  .beneficios { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .beneficios li { color: #ccc; font-size: 0.9rem; line-height: 1.5; }
+
+  /* Números */
+  .numeros { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 3.5rem; }
+  .numero-card {
+    background: #111; border: 1px solid #222; border-radius: 12px;
+    padding: 1.2rem 1.8rem; display: flex; flex-direction: column; align-items: center; gap: 0.3rem; flex: 1; min-width: 120px;
+  }
+  .numero-val { font-size: 2rem; font-weight: 900; color: #f0c000; }
+  .numero-label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.04em; text-align: center; }
+
+  /* Proceso */
+  .proceso { display: flex; align-items: flex-start; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 3.5rem; justify-content: center; }
+  .paso { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.2rem; flex: 1; min-width: 130px; max-width: 160px; text-align: center; position: relative; }
+  .paso-num { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #f0c000; color: #000; font-weight: 900; font-size: 0.75rem; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+  .paso-icon { font-size: 1.6rem; display: block; margin-bottom: 0.4rem; }
+  .paso strong { display: block; color: #f0c000; font-size: 0.85rem; margin-bottom: 0.3rem; }
+  .paso p { color: #888; font-size: 0.78rem; line-height: 1.4; margin: 0; }
+  .paso-sep { color: #444; font-size: 1.5rem; margin-top: 2rem; }
+  @media (max-width: 700px) { .paso-sep { display: none; } .paso { max-width: 100%; } }
+
+  /* Testimonios */
+  .testimonios { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 3.5rem; }
+  .testimonio { background: #111; border: 1px solid #222; border-radius: 12px; padding: 1.5rem; }
+  .testimonio p { color: #ccc; font-style: italic; line-height: 1.7; margin-bottom: 0.8rem; }
+  .testimonio span { color: #f0c000; font-size: 0.85rem; font-weight: 600; }
 
   .mv-grid {
     display: grid;
