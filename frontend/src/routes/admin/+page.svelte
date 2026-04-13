@@ -19,6 +19,7 @@
   // ── Galería ───────────────────────────────────────────────────
   const BUCKET = 'fotos-servicios';
   const SERVICIOS = [
+    { slug: 'certificaciones',          icon: '🎓', nombre: 'Certificaciones y diplomas' },
     { slug: 'instalaciones-electricas', icon: '🔌', nombre: 'Instalaciones eléctricas' },
     { slug: 'remodelaciones',           icon: '🏗️', nombre: 'Remodelaciones' },
     { slug: 'iluminacion-led',          icon: '💡', nombre: 'Iluminación LED' },

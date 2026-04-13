@@ -15,6 +15,7 @@
   ];
 
   let galerias = SERVICIOS.map(s => ({ ...s, fotos: [], cargando: true }));
+  let certFotos = [];
   let reviews = [];
   let newReview = '';
   let newRating = 5;
@@ -35,6 +36,11 @@
         return { ...s, fotos, cargando: false };
       })
     );
+    // Cargar certificaciones
+    const { data: certData } = await supabase.storage.from(BUCKET).list('certificaciones', { sortBy: { column: 'created_at', order: 'asc' } });
+    certFotos = (certData || [])
+      .filter(f => f.name !== '.emptydir')
+      .map(f => ({ src: publicUrl(`certificaciones/${f.name}`), name: f.name }));
   }
 
   onMount(async () => {
@@ -109,11 +115,11 @@
 
   <!-- Números -->
   <div class="numeros">
-    <div class="numero-card"><span class="numero-val">100+</span><span class="numero-label">Proyectos completados</span></div>
     <div class="numero-card"><span class="numero-val">⭐ 5</span><span class="numero-label">Estrellas de satisfacción</span></div>
     <div class="numero-card"><span class="numero-val">24/7</span><span class="numero-label">Emergencias atendidas</span></div>
     <div class="numero-card"><span class="numero-val">6m</span><span class="numero-label">Garantía escrita</span></div>
     <div class="numero-card"><span class="numero-val">5+</span><span class="numero-label">Zonas de cobertura</span></div>
+    <div class="numero-card"><span class="numero-val">0%</span><span class="numero-label">Sorpresas en el precio</span></div>
   </div>
 
   <!-- Cómo trabajamos -->
@@ -160,6 +166,22 @@
     <div class="testimonio"><p>"Samuel llegó puntual, explicó todo con claridad y dejó mi instalación eléctrica impecable. Recomendado 100%."</p><span>— María G., La Guácima</span></div>
     <div class="testimonio"><p>"Excelente trabajo en la pintura de mi casa. Profesionales y honestos con los precios."</p><span>— Carlos R., Alajuela Centro</span></div>
     <div class="testimonio"><p>"Resolvieron mi emergencia eléctrica un domingo. Servicio rápido y efectivo."</p><span>— Ana P., San Antonio</span></div>
+  </div>
+
+  <!-- Certificaciones -->
+  <h2 class="section-title">Certificaciones y formación</h2>
+  <div class="cert-seccion">
+    {#if certFotos.length === 0}
+      <p class="sin-fotos">Certificaciones próximamente...</p>
+    {:else}
+      <div class="cert-grid">
+        {#each certFotos as foto}
+          <div class="cert-card">
+            <img src={foto.src} alt={foto.name} loading="lazy" />
+          </div>
+        {/each}
+      </div>
+    {/if}
   </div>
 
   <h2 class="section-title">Proyectos realizados</h2>
@@ -319,6 +341,16 @@
     border-bottom: 1px solid #222;
     padding-bottom: 0.6rem;
   }
+  /* Certificaciones */
+  .cert-seccion { margin-bottom: 3.5rem; }
+  .cert-grid { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .cert-card {
+    background: #111; border: 1px solid #333; border-radius: 12px;
+    overflow: hidden; max-width: 340px;
+    box-shadow: 0 4px 20px rgba(240,192,0,0.08);
+  }
+  .cert-card img { width: 100%; display: block; }
+
   .sin-fotos {
     color: #555;
     font-style: italic;
