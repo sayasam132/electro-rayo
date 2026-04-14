@@ -95,8 +95,10 @@
   <!-- Quiénes somos -->
   <div class="sobre-grid">
     <div class="sobre-texto">
-      <img src="https://rptbfkwrrjhfpptmvlby.supabase.co/storage/v1/object/public/fotos-servicios/logo/logo.jpg" alt="Electro Rayo logo" class="logo-sobre" />
-      <h2>Tu Electricista de Confianza en Alajuela</h2>
+      <div class="titulo-logo">
+        <h2>Tu Electricista de Confianza en Alajuela</h2>
+        <img src="https://rptbfkwrrjhfpptmvlby.supabase.co/storage/v1/object/public/fotos-servicios/logo/logo.jpg" alt="Electro Rayo logo" class="logo-sobre" />
+      </div>
       <p>Electro Rayo nació de la pasión por resolver problemas eléctricos y mejorar espacios. Como electricista con años de experiencia en Alajuela, fundé esta empresa con un objetivo claro: ofrecer servicios de calidad a precios justos.</p>
       <p>Hoy trabajamos en hogares y negocios de toda la zona, desde una simple instalación de tomacorriente hasta remodelaciones completas. Lo que nos motiva es ver la satisfacción de nuestros clientes cuando ven su espacio transformado y funcionando perfectamente.</p>
       <p class="firma">— Samuel Mejía Saquic, Fundador y Electricista Principal</p>
@@ -142,12 +144,12 @@
     <div class="mv-card">
       <span class="mv-icon">⚡</span>
       <h2>Misión</h2>
-      <p>Brindar servicios de instalaciones eléctricas y remodelaciones de alta calidad a familias y negocios de Alajuela, garantizando seguridad, profesionalismo y precios justos.</p>
+      <p>Brindar servicios de remodelación y trabajos eléctricos de calidad a familias y negocios de Alajuela, satisfaciendo sus necesidades de mejorar y renovar sus espacios. Nos comprometemos a trabajar con honestidad, puntualidad y precios accesibles, garantizando la satisfacción total de nuestros clientes.</p>
     </div>
     <div class="mv-card">
       <span class="mv-icon">🎯</span>
       <h2>Visión</h2>
-      <p>Ser la empresa de servicios eléctricos y remodelaciones más confiable y reconocida en Alajuela, expandiendo nuestros servicios a otras zonas del Valle Central.</p>
+      <p>Ser la empresa de remodelaciones más confiable y reconocida en Alajuela dentro de los próximos cinco años. Queremos expandir nuestros servicios a otras zonas del país y convertirnos en la primera opción cuando las personas piensen en remodelar sus hogares o negocios.</p>
     </div>
     <div class="mv-card">
       <span class="mv-icon">💡</span>
@@ -274,7 +276,9 @@
   .sub { color: #888; margin-bottom: 3rem; }
   .section-title { font-size: 1.8rem; color: #f0c000; margin-bottom: 1.5rem; }
 
-  .logo-sobre { width: 120px; height: 120px; object-fit: contain; margin-bottom: 1rem; }
+  .titulo-logo { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+  .titulo-logo h2 { margin: 0; }
+  .logo-sobre { width: 100px; height: 100px; object-fit: contain; flex-shrink: 0; }
 
   /* Sobre nosotros */
   .sobre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
