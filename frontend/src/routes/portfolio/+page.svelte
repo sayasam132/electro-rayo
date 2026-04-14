@@ -16,6 +16,7 @@
 
   let galerias = SERVICIOS.map(s => ({ ...s, fotos: [], cargando: true }));
   let certFotos = [];
+  let lightbox = null; // src de la foto abierta
   let reviews = [];
   let newReview = '';
   let newRating = 5;
@@ -179,9 +180,9 @@
     {:else}
       <div class="cert-grid">
         {#each certFotos as foto}
-          <div class="cert-card">
+          <button class="cert-card" on:click={() => lightbox = foto.src}>
             <img src={foto.src} alt={foto.name} loading="lazy" />
-          </div>
+          </button>
         {/each}
       </div>
     {/if}
@@ -199,14 +200,24 @@
       {:else}
         <div class="fotos-grid">
           {#each g.fotos as foto}
-            <div class="foto-card">
+            <button class="foto-card" on:click={() => lightbox = foto.src}>
               <img src={foto.src} alt={foto.name} loading="lazy" />
-            </div>
+            </button>
           {/each}
         </div>
       {/if}
     </section>
   {/each}
+
+  <!-- Lightbox -->
+  {#if lightbox}
+    <div class="lightbox-overlay" role="button" tabindex="0"
+      on:click={() => lightbox = null}
+      on:keydown={e => e.key === 'Escape' && (lightbox = null)}>
+      <img src={lightbox} alt="Foto ampliada" class="lightbox-img" />
+      <button class="lightbox-close" on:click={() => lightbox = null}>✕</button>
+    </div>
+  {/if}
 
   <!-- Reseñas -->
   <section class="reviews-section">
@@ -348,14 +359,36 @@
     border-bottom: 1px solid #222;
     padding-bottom: 0.6rem;
   }
+  /* Lightbox */
+  .lightbox-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 500; cursor: zoom-out; padding: 1rem;
+  }
+  .lightbox-img {
+    max-width: 90vw; max-height: 90vh;
+    object-fit: contain; border-radius: 8px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+  }
+  .lightbox-close {
+    position: fixed; top: 1rem; right: 1rem;
+    background: #222; border: none; color: #fff;
+    width: 40px; height: 40px; border-radius: 50%;
+    font-size: 1.1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lightbox-close:hover { background: #f0c000; color: #000; }
+
   /* Certificaciones */
   .cert-seccion { margin-bottom: 3.5rem; }
   .cert-grid { display: flex; gap: 1.5rem; flex-wrap: wrap; }
   .cert-card {
     background: #111; border: 1px solid #333; border-radius: 12px;
-    overflow: hidden; max-width: 340px;
+    overflow: hidden; max-width: 340px; cursor: zoom-in; padding: 0;
     box-shadow: 0 4px 20px rgba(240,192,0,0.08);
+    transition: transform 0.2s, border-color 0.2s;
   }
+  .cert-card:hover { transform: scale(1.02); border-color: #f0c000; }
   .cert-card img { width: 100%; display: block; }
 
   .sin-fotos {
@@ -369,13 +402,12 @@
     gap: 1rem;
   }
   .foto-card {
-    background: #111;
-    border: 1px solid #222;
-    border-radius: 10px;
-    overflow: hidden;
-    transition: border-color 0.2s;
+    background: #111; border: 1px solid #222;
+    border-radius: 10px; overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: zoom-in; padding: 0; text-align: left;
   }
-  .foto-card:hover { border-color: #f0c000; }
+  .foto-card:hover { border-color: #f0c000; transform: scale(1.02); }
   .foto-card img {
     width: 100%;
     aspect-ratio: 4/3;
