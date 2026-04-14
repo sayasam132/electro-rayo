@@ -38,7 +38,10 @@
 
 <!-- ─── Navbar ─────────────────────────────────────────────── -->
 <nav>
-  <a href="/" class="brand">⚡ Electro Rayo</a>
+  <a href="/" class="brand">
+    <img src="https://rptbfkwrrjhfpptmvlby.supabase.co/storage/v1/object/public/fotos-servicios/logo/logo.jpg" alt="Electro Rayo" class="logo-img" />
+    <span>Electro Rayo</span>
+  </a>
 
   <!-- Desktop links -->
   <div class="nav-links">
@@ -176,7 +179,8 @@
     top: 0;
     z-index: 100;
   }
-  .brand { font-size: 1.3rem; font-weight: 800; color: #f0c000; margin-right: auto; }
+  .brand { font-size: 1.3rem; font-weight: 800; color: #f0c000; margin-right: auto; display: flex; align-items: center; gap: 0.6rem; }
+  .logo-img { height: 40px; width: 40px; object-fit: contain; border-radius: 50%; }
   .nav-links { display: flex; gap: 1.2rem; }
   .nav-links a:hover { color: #f0c000; }
   .nav-auth { display: flex; align-items: center; gap: 0.8rem; }

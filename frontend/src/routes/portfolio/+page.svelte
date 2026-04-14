@@ -95,6 +95,7 @@
   <!-- Quiénes somos -->
   <div class="sobre-grid">
     <div class="sobre-texto">
+      <img src="https://rptbfkwrrjhfpptmvlby.supabase.co/storage/v1/object/public/fotos-servicios/logo/logo.jpg" alt="Electro Rayo logo" class="logo-sobre" />
       <h2>Tu Electricista de Confianza en Alajuela</h2>
       <p>Electro Rayo nació de la pasión por resolver problemas eléctricos y mejorar espacios. Como electricista con años de experiencia en Alajuela, fundé esta empresa con un objetivo claro: ofrecer servicios de calidad a precios justos.</p>
       <p>Hoy trabajamos en hogares y negocios de toda la zona, desde una simple instalación de tomacorriente hasta remodelaciones completas. Lo que nos motiva es ver la satisfacción de nuestros clientes cuando ven su espacio transformado y funcionando perfectamente.</p>
@@ -272,6 +273,8 @@
   h1 span { color: #f0c000; }
   .sub { color: #888; margin-bottom: 3rem; }
   .section-title { font-size: 1.8rem; color: #f0c000; margin-bottom: 1.5rem; }
+
+  .logo-sobre { width: 120px; height: 120px; object-fit: contain; margin-bottom: 1rem; }
 
   /* Sobre nosotros */
   .sobre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
